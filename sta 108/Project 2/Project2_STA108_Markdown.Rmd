@@ -1,0 +1,118 @@
+---
+title: "Project2_STA108_Markdown"
+author: "Cynthia"
+date: "2/27/2020"
+output: html_document
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+CDI <- read.table('~/Desktop/CDI.txt', header = FALSE)
+```
+
+##PART 1: Multiple linear regression I
+
+6.28: Refer to the CDI data set in Appendix C.2. You have been asked to evaluate two alternative models for predicting the number of active physicians (Y) (V8) in a CDI. Proposed model I includes as predictor variables total population (X1) (V5), land area (X2) (V4), and total personal income (X3) (V16). Proposed model II includes as predictor variables population density (X1, total population divided by land area) (V5/V4), percent of population greater than 64 years old (X2) (V7), and total personal income (X3) (V16). 
+
+a. Prepare a stem-and-leaf plot for each of the predictor variables. What noteworthy information is provided by your plots? 
+
+```{r, echo=FALSE}
+#Proposed model I
+
+stem(CDI$V5) #total population (X1)
+#The stem-and-leaf plot is not symmetric but is right-skewed, with the highest frequency around 0. 
+
+stem(CDI$V4) #land area (X2)
+#The stem-and-leaf plot is not symmetric but is right-skewed, with the highest frequency around 0 and an outlier. 
+
+stem(CDI$V16) #total personal income (X3) 
+#The stem-and-leaf plot is not symmetric but is right-skewed, with the highest frequency around 0 and some outliers.
+
+# -------
+
+#Proposed model II
+
+stem(CDI$V5 / CDI$V4) #population density (X1)
+#The stem-and-leaf plot is not symmetric but is extremely right-skewed, with the highest frequency around 0 and some outliers.
+
+stem(CDI$V7) #percent of population greater than 64 years old (X2)
+#The stem-and-leaf plot is approximately symmetric around 10/12. 
+
+stem(CDI$V16) #total personal income (X3)
+#The stem-and-leaf plot is not symmetric but is right-skewed, with the highest frequency around 0 and some outliers.
+```
+
+b. Obtain the scatter plot matrix and correlation matrix for each proposed model. Summarize the information provided. 
+
+```{r, echo=FALSE}
+#Proposed model I 
+data = CDI[c(8,5,4,16)]
+colnames(data) = c("y","x1","x2", "x3")
+pairs(data)
+cor(data)
+#Based on the scatter plot matrix and correlation matrix, there seems to be a positive relationship between Y (number of active physicians) and X1 (total population) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9402; between X1 (total population) and X3 (total personal income) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9867; between Y (number of active physicians) and X3 (total population) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9481. There doesn't seem to be clear positive relationships between any of the other variable combinations. 
+
+#Proposed model II
+p_data = CDI[c(8,(5/4),7,16)] #dunno if this is right
+colnames(p_data) = c("p","q1","q2", "q3")
+pairs(p_data)
+cor(p_data)
+#Based on the scatter plot matrix and correlation matrix, there seems to be a positive relationship between P (number of active physicians) and q3 (total personal income) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9481. There doesn't seem to be clear positive relationships between any of the other variable combinations. 
+```
+
+c. For each proposed model, fit the first-order regression model (6.5) with three predictor variables.
+
+```{r, echo=FALSE}
+lm(formula = y ~ x1 + x2 + x3, data=data)
+lm(formula = p ~ q1 + q2 + q3, data=p_data)
+
+```
+
+d. Calculate R^2 for each model. Is one model clearly preferable in terms of this measure? 
+
+```{r, echo=FALSE}
+
+```
+
+e. For each model, obtain the residuals and plot them against Yhat, each of the three predictor variables, and each of the two-factor interaction terms. Also prepare a normal probability plot for each of the two fitted models. Interpret your plots and state your findings. Is one model clearly preferable in terms of appropriateness? 
+
+```{r, echo=FALSE}
+
+```
+
+f. Now expand both models proposed above by adding all possible two-factor interactions. Note that, for a model with X1, X2, X3 as the predictors, the two-factor interactions are X1X2, X1X3, X2X3. Repeat part d for the two expanded models.
+
+```{r, echo=FALSE}
+
+```
+
+##PART 2: Multiple linear regression II
+
+7.37: Refer to the CDI data set in Appendix C2. For predicting the number of active physicians (Y) in a county, it has been decided to include total population (X1) and total personal income (X2) as predictor variables. The question now is whether an additional predictor variable would be helpful in the model and, if so, which variable would be most helpful. Assume that a first-order multiple regression model is appropriate. 
+
+1.Take out variable X6, that is, you will not consider the total serious crimes (X6) as a predictor in this project. Make the corresponding changes in parts a–c.
+
+a. For each of the following variables, calculate the coefficent of partial determination given that X1 and X2 are included in the model: land area (X3), percent of population 65 or older (X4), number of hospital beds (X5). 
+
+```{r, echo=FALSE}
+
+```
+
+b) On the basis of the results in part (a), which of the four additional predictor variables is best? Is the extra sum of squares associated with this variable larger than those for the other three variables? 
+
+```{r, echo=FALSE}
+
+```
+
+c) Using the F* test statistic, test whether or not the variable determined to be best in part (b) is helpful in the regression model when X1 and X2 are included in the model; use alpha = .01. State the alternatives, decision rule, and conclusion. Would the F test statistics for the other three potential predictor variables be as large as the one here? Discuss. 
+
+```{r, echo=FALSE}
+
+```
+
+d) Compute three additional coefficients of partial determination: R2Y,X3,X4|X1,X2,R2Y,X3,X5|X1,X2, and R2Y,X4,X5|X1,X2. Which pair of predictors is relatively more important than other pairs? Use the F test to find out whether adding the best pair to the model is helpful given that X1, X2 are already included.
+
+```{r, echo=FALSE}
+
+```
+
