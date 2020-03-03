@@ -53,7 +53,7 @@ cor(data)
 #Based on the scatter plot matrix and correlation matrix, there seems to be a positive relationship between Y (number of active physicians) and X1 (total population) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9402; between X1 (total population) and X3 (total personal income) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9867; between Y (number of active physicians) and X3 (total population) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9481. There doesn't seem to be clear positive relationships between any of the other variable combinations. 
 
 #Proposed model II
-p_data = CDI[c(8,(5/4),7,16)] #dunno if this is right
+p_data = CDI[c(8,(5/4),7,16)] #NEED TO CHECK 
 colnames(p_data) = c("p","q1","q2", "q3")
 pairs(p_data)
 cor(p_data)
@@ -63,38 +63,124 @@ cor(p_data)
 c. For each proposed model, fit the first-order regression model (6.5) with three predictor variables.
 
 ```{r, echo=FALSE}
+#Proposed model I
 lm(formula = y ~ x1 + x2 + x3, data=data)
-lm(formula = p ~ q1 + q2 + q3, data=p_data)
+#Yhat = .0008355x1 - 0.06552x2 + 0.09413x3 - 13.32 
 
+#Proposed model II #don't think this is right
+lm(formula = p ~ q1 + q2 + q3, data=p_data)
+#Phat = -.3848q1 + 8.2451q2 + 0.1296q3 - 0.3848
 ```
 
 d. Calculate R^2 for each model. Is one model clearly preferable in terms of this measure? 
 
 ```{r, echo=FALSE}
+#Proposed model I
+summary(lm(formula = y ~ x1 + x2 + x3, data = data))$r.squared
+#R^2 = 0.9026432
 
+#Proposed model II
+summary(lm(formula = p ~ q1 + q2 + q3, data=p_data))$r.squared
+#R^2 = 0.8997595
+
+#Because proposed model I (.9026) is the closest r^2 value to 1.00, it is more preferable than proposed model II (.8997). 
 ```
 
 e. For each model, obtain the residuals and plot them against Yhat, each of the three predictor variables, and each of the two-factor interaction terms. Also prepare a normal probability plot for each of the two fitted models. Interpret your plots and state your findings. Is one model clearly preferable in terms of appropriateness? 
 
 ```{r, echo=FALSE}
+#Proposed model I -----
 
+#Yhat
+fit = lm(formula = y~x1+x2+x3, data=data)
+residuals = fit$residuals
+plot(x=CDI$V8, y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for Yhat")
+abline(h=0, col='red')
+
+#x1
+fit = lm(formula = y~x1+x2+x3, data=data)
+p_residuals = fit$residuals
+plot(x=CDI$V5, y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for x1")
+abline(h=0, col='red')
+
+#x2
+fit = lm(formula = y~x1+x2+x3, data=data)
+p_residuals = fit$residuals
+plot(x=CDI$V4, y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for x2")
+abline(h=0, col='red')
+
+#x3
+fit = lm(formula = y~x1+x2+x3, data=data)
+p_residuals = fit$residuals
+plot(x=CDI$V16, y=residuals, xlab='predictor variable', ylab='residuals', , main="Residual plot for x3")
+abline(h=0, col='red')
+
+#don't know how to plot for 2-factor interactions?!!!
+
+#normal qq plot 
+qqplot = qqnorm(p_residuals)
+qqline(residuals, col='red', main="Normal QQ Plot") # theoretical line
+
+#Proposed model II -----
+
+#Yhat
+fit = lm(formula = p~q1+q2+q3, data=p_data)
+residuals = fit$residuals
+plot(x=CDI$V8, y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for Phat")
+abline(h=0, col='red')
+
+#x1
+fit = lm(formula = p~q1+q2+q3, data=p_data)
+residuals = fit$residuals
+plot(x=(CDI$V5)/(CDI$V4), y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for q1")
+abline(h=0, col='red')
+
+#x2
+fit = lm(formula = p~q1+q2+q3, data=p_data)
+residuals = fit$residuals
+plot(x=CDI$V7, y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for q2")
+abline(h=0, col='red')
+
+#x3
+fit = lm(formula = p~q1+q2+q3, data=p_data)
+residuals = fit$residuals
+plot(x=CDI$V16, y=residuals, xlab='predictor variable', ylab='residuals', main="Residual plot for q3")
+abline(h=0, col='red')
+
+#don't know how to plot for 2-factor interactions?!!! 
+
+#normal qq plot 
+qqplot = qqnorm(residuals)
+qqline(residuals, col='red', main="Normal QQ Plot") # theoretical line
 ```
 
 f. Now expand both models proposed above by adding all possible two-factor interactions. Note that, for a model with X1, X2, X3 as the predictors, the two-factor interactions are X1X2, X1X3, X2X3. Repeat part d for the two expanded models.
 
 ```{r, echo=FALSE}
+#Proposed model I
+summary(lm(formula = y ~ (x1*x2) + (x1*x3) + (x2*x3), data = data))$r.squared
+#R^2 = 0.9063789
 
+#Proposed model II
+summary(lm(formula = p ~ (q1*q2) + (q1*q3) + (q2*q3), data = p_data))$r.squared
+#R^2 = 0.9021035
 ```
 
 ##PART 2: Multiple linear regression II
 
-7.37: Refer to the CDI data set in Appendix C2. For predicting the number of active physicians (Y) in a county, it has been decided to include total population (X1) and total personal income (X2) as predictor variables. The question now is whether an additional predictor variable would be helpful in the model and, if so, which variable would be most helpful. Assume that a first-order multiple regression model is appropriate. 
+7.37: Refer to the CDI data set in Appendix C2. For predicting the number of active physicians (Y) (V8) in a county, it has been decided to include total population (X1) (V5) and total personal income (X2) (V16) as predictor variables. The question now is whether an additional predictor variable would be helpful in the model and, if so, which variable would be most helpful. Assume that a first-order multiple regression model is appropriate. 
 
 1.Take out variable X6, that is, you will not consider the total serious crimes (X6) as a predictor in this project. Make the corresponding changes in parts a–c.
 
-a. For each of the following variables, calculate the coefficent of partial determination given that X1 and X2 are included in the model: land area (X3), percent of population 65 or older (X4), number of hospital beds (X5). 
+a. For each of the following variables, calculate the coefficent of partial determination given that X1 and X2 are included in the model: land area (X3) (V4), percent of population 65 or older (X4) (V7), number of hospital beds (X5) (V9). 
 
 ```{r, echo=FALSE}
+y = CDI$V8
+x1 = CDI$V5
+x2 = CDI$V16
+x3 = CDI$V4
+x4 = CDI$V7
+x5 = CDI$V9
 
 ```
 
