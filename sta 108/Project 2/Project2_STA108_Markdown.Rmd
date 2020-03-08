@@ -51,10 +51,20 @@ cor(data)
 #Based on the scatter plot matrix and correlation matrix, there seems to be a positive relationship between Y (number of active physicians) and X1 (total population) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9402; between X1 (total population) and X3 (total personal income) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9867; between Y (number of active physicians) and X3 (total population) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9481. There doesn't seem to be clear positive relationships between any of the other variable combinations. 
 
 #Proposed model II
-p_data = CDI[c(8,(5/4),7,16)] #NEED TO CHECK - shall go to OH
-colnames(p_data) = c("p","q1","q2", "q3")
+
+#p_data = CDI[c(8,cbind(8,5/4,CDI(,7,16)),7,16)] #NEED TO CHECK - shall go to OH
+#colnames(p_data) = c("p","q1","q2","q3")
+#pairs(p_data)
+#cor(p_data)
+
+p_data = CDI[,c(7,16)]
+colnames(p_data) = c("q2", "q3")
+q1 = CDI$V5/CDI$V4
+p = CDI$V8
+p_data = cbind(p, q1, p_data)
 pairs(p_data)
 cor(p_data)
+
 #Based on the scatter plot matrix and correlation matrix, there seems to be a positive relationship between P (number of active physicians) and q3 (total personal income) as the scatter plot matrix appears to be approx linear and with the correlation matrix at .9481. There doesn't seem to be clear positive relationships between any of the other variable combinations. 
 ```
 
@@ -320,3 +330,6 @@ pf(F.statistic, df.reduced-df.full, df.full, lower.tail = FALSE)
 
 ```
 
+## Code Appendix
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+```
